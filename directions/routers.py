@@ -17,7 +17,6 @@ import json
 
 import polycomp
 import requests
-
 from base import Router, Route, Maneuver, Waypoint
 
 
@@ -133,6 +132,12 @@ class Mapquest(Router):
         return locations
 
     def raw_query(self, waypoints, **kwargs):
+
+        try:
+            avoidLinkIds = kwargs["avoid"]
+        except:
+            avoidLinkIds = []
+            
         params = {
             'key': self.key,
             'inFormat': 'json',
@@ -147,6 +152,7 @@ class Mapquest(Router):
                 'shapeFormat': 'cmp',
                 'generalize': 0,  # No simplification
                 'unit': 'k',
+                'mustAvoidLinkIds' : avoidLinkIds
             },
         }
         data = json.dumps(data, separators=(',', ':'))
